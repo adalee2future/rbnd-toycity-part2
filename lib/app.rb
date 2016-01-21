@@ -1,26 +1,62 @@
 require 'json'
-path = File.join(File.dirname(__FILE__), '../data/products.json')
-file = File.read(path)
-products_hash = JSON.parse(file)
 
-# Print "Sales Report" in ascii art
+def setup_files
+  path = File.join(File.dirname(__FILE__), '../data/products.json')
+  file = File.read(path)
+  $products_hash = JSON.parse(file)
+  $report_file = File.new("report.txt", "w+")
+end
 
 # Print today's date
+def print_today
+  puts "Today's date: #{Date.today}"
+end
 
-# Print "Products" in ascii art
+# print some stars to seperate lines
+def line_sep
+  puts "*" * 25
+end
 
-# For each product in the data set:
-	# Print the name of the toy
-	# Print the retail price of the toy
-	# Calculate and print the total number of purchases
-  # Calcalate and print the total amount of sales
-  # Calculate and print the average price the toy sold for
-  # Calculate and print the average discount based off the average sales price
+def create_report
+  items = $products_hash['items']
+  items.each do |product|
+    # Print the name of the toy
+    puts product['title']
+    line_sep
 
-# Print "Brands" in ascii art
+    # Print the retail price of the toy
+    price = Float(product['full-price']).round(2)
+    puts "price: $#{price}"
 
-# For each brand in the data set:
-	# Print the name of the brand
-	# Count and print the number of the brand's toys we stock
-	# Calculate and print the average price of the brand's toys
-	# Calculate and print the total sales volume of all the brand's toys combined
+    # Calculate and print the total number of purchases
+    num = product['purchases'].length
+    puts "num purchases: #{num}"
+
+    # Calculate the total amount of sales
+    total_sales = 0
+    product['purchases'].each do |purchase|
+      total_sales += Float(purchase['price'])
+    end
+
+    # Print the total amount of sales
+    puts "total amount of sales: $#{total_sales.round(2)}" 
+
+    # Calculate and print the average price the toy sold for
+    avg_price = total_sales / num
+    puts "average price: $#{avg_price.round(2)}"
+
+    # Calculate and print the average discount based off the average sales price
+    discount = 1 - avg_price / Float(product['full-price'])
+    puts "average discount: #{(discount * 100).round(2)}%"
+
+    line_sep
+    puts
+  end
+end
+
+def start
+  setup_files
+  create_report
+end
+
+start
