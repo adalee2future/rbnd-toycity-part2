@@ -8,11 +8,6 @@ def setup_files
   $report_file = File.new("report.txt", "w+")
 end
 
-# Print today's date
-def print_today
-  puts "Today's date: #{Date.today}"
-end
-
 # print some stars to seperate lines
 def line_sep
   puts "*" * 25
@@ -123,7 +118,6 @@ def create_report
 end
 
 def start
-  print_today
   setup_files
   create_report
 end
