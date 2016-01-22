@@ -18,7 +18,44 @@ def line_sep
   puts "*" * 25
 end
 
-# 
+# sales report header
+def sales_report_header
+  puts "  #####                                 ######"
+  puts " #     #   ##   #      ######  ####     #     # ###### #####   ####  #####  #####"
+  puts " #        #  #  #      #      #         #     # #      #    # #    # #    #   #"
+  puts "  #####  #    # #      #####   ####     ######  #####  #    # #    # #    #   #"
+  puts "       # ###### #      #           #    #   #   #      #####  #    # #####    #"
+  puts " #     # #    # #      #      #    #    #    #  #      #      #    # #   #    #"
+  puts "  #####  #    # ###### ######  ####     #     # ###### #       ####  #    #   #"
+  puts "********************************************************************************"
+  puts
+end
+
+# puts product report header
+def product_header
+  puts "                     _            _       "
+  puts "                    | |          | |      "
+  puts " _ __  _ __ ___   __| |_   _  ___| |_ ___ "
+  puts "| '_ \\| '__/ _ \\ / _` | | | |/ __| __/ __|"
+  puts "| |_) | | | (_) | (_| | |_| | (__| |_\\__ \\"
+  puts "| .__/|_|  \\___/ \\__,_|\\__,_|\\___|\\__|___/"
+  puts "| |                                       "
+  puts "|_|                                       "
+  puts
+end
+
+# print brands header
+def brand_header
+	puts " _                         _     "
+	puts "| |                       | |    "
+	puts "| |__  _ __ __ _ _ __   __| |___ "
+	puts "| '_ \\| '__/ _` | '_ \\ / _` / __|"
+	puts "| |_) | | | (_| | | | | (_| \\__ \\"
+	puts "|_.__/|_|  \\__,_|_| |_|\\__,_|___/"
+	puts
+end
+
+# given brands_hash, print brands report
 def report_brands_hash(brands_hash)
   brands_hash.each do |brand, info|
     puts brand
@@ -35,6 +72,8 @@ end
 def create_report
   items = $products_hash['items']
   brands_hash = {}
+  sales_report_header
+  product_header
   items.each do |product|
     # Print the name of the toy
     puts product['title']
@@ -79,6 +118,7 @@ def create_report
     line_sep
     puts
   end
+  brand_header
   report_brands_hash(brands_hash)
 end
 
