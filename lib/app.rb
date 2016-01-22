@@ -1,4 +1,5 @@
 require 'json'
+require 'date'
 
 def setup_files
   path = File.join(File.dirname(__FILE__), '../data/products.json')
@@ -17,25 +18,51 @@ def line_sep
   puts "*" * 25
 end
 
+# 
+def report_brands_hash(brands_hash)
+  brands_hash.each do |brand, info|
+    puts brand
+    line_sep
+    puts "number of brand's toys: #{info['stock']}"
+    puts "average price: $#{(info['full-price'] / info['count']).round(2)}"
+    puts "total revenue for this brands: $#{info['revenue'].round(2)}"
+    line_sep
+    puts
+  end
+end
+
+# create report
 def create_report
   items = $products_hash['items']
+  brands_hash = {}
   items.each do |product|
     # Print the name of the toy
     puts product['title']
     line_sep
 
     # Print the retail price of the toy
-    price = Float(product['full-price']).round(2)
-    puts "price: $#{price}"
+    full_price = Float(product['full-price']).round(2)
+    puts "full price: $#{full_price}"
 
     # Calculate and print the total number of purchases
     num = product['purchases'].length
     puts "num purchases: #{num}"
 
+    # Some calculation for brands_hash
+    brand = product['brand']
+    brands_hash[brand] ||= {}
+    brands_hash[brand]['count'] = 1 + brands_hash[brand].fetch('count', 0)
+    brands_hash[brand]['stock'] = product['stock'] + brands_hash[brand].fetch('stock', 0)
+    brands_hash[brand]['full-price'] = Float(product['full-price']) + brands_hash[brand].fetch('full-price', 0.0)
+
     # Calculate the total amount of sales
-    total_sales = 0
+    # Calculate revenue for brand
+    total_sales = 0.0
+    brands_hash[brand]['revenue'] ||= 0.0
     product['purchases'].each do |purchase|
-      total_sales += Float(purchase['price'])
+      price = Float(purchase['price'])
+      total_sales += price
+      brands_hash[brand]['revenue'] += price
     end
 
     # Print the total amount of sales
@@ -52,9 +79,11 @@ def create_report
     line_sep
     puts
   end
+  report_brands_hash(brands_hash)
 end
 
 def start
+  print_today
   setup_files
   create_report
 end
