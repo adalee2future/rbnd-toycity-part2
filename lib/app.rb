@@ -10,56 +10,61 @@ end
 
 # print some stars to seperate lines
 def line_sep
-  puts "*" * 25
+  $report_file.write("*" * 24 + "\n")
+end
+
+# print blank line
+def line_blank
+  $report_file.write("\n")
 end
 
 # sales report header
 def sales_report_header
-  puts "  #####                                 ######"
-  puts " #     #   ##   #      ######  ####     #     # ###### #####   ####  #####  #####"
-  puts " #        #  #  #      #      #         #     # #      #    # #    # #    #   #"
-  puts "  #####  #    # #      #####   ####     ######  #####  #    # #    # #    #   #"
-  puts "       # ###### #      #           #    #   #   #      #####  #    # #####    #"
-  puts " #     # #    # #      #      #    #    #    #  #      #      #    # #   #    #"
-  puts "  #####  #    # ###### ######  ####     #     # ###### #       ####  #    #   #"
-  puts "********************************************************************************"
-  puts
+  $report_file.write("  #####                                 ######\n")
+  $report_file.write(" #     #   ##   #      ######  ####     #     # ###### #####   ####  #####  #####\n")
+  $report_file.write(" #        #  #  #      #      #         #     # #      #    # #    # #    #   #\n")
+  $report_file.write("  #####  #    # #      #####   ####     ######  #####  #    # #    # #    #   #\n")
+  $report_file.write("       # ###### #      #           #    #   #   #      #####  #    # #####    #\n")
+  $report_file.write(" #     # #    # #      #      #    #    #    #  #      #      #    # #   #    #\n")
+  $report_file.write("  #####  #    # ###### ######  ####     #     # ###### #       ####  #    #   #\n")
+  $report_file.write("********************************************************************************\n")
+  line_blank
 end
 
 # puts product report header
 def product_header
-  puts "                     _            _       "
-  puts "                    | |          | |      "
-  puts " _ __  _ __ ___   __| |_   _  ___| |_ ___ "
-  puts "| '_ \\| '__/ _ \\ / _` | | | |/ __| __/ __|"
-  puts "| |_) | | | (_) | (_| | |_| | (__| |_\\__ \\"
-  puts "| .__/|_|  \\___/ \\__,_|\\__,_|\\___|\\__|___/"
-  puts "| |                                       "
-  puts "|_|                                       "
-  puts
+  $report_file.write("                       _            _       \n")
+  $report_file.write("                      | |          | |      \n")
+  $report_file.write("   _ __  _ __ ___   __| |_   _  ___| |_ ___ \n")
+  $report_file.write("  | '_ \\| '__/ _ \\ / _` | | | |/ __| __/ __|\n")
+  $report_file.write("  | |_) | | | (_) | (_| | |_| | (__| |_\\__ \\\n")
+  $report_file.write("  | .__/|_|  \\___/ \\__,_|\\__,_|\\___|\\__|___/\n")
+  $report_file.write("  | |                                       \n")
+  $report_file.write("  |_|                                       \n")
+  line_blank
 end
 
 # print brands header
 def brand_header
-	puts " _                         _     "
-	puts "| |                       | |    "
-	puts "| |__  _ __ __ _ _ __   __| |___ "
-	puts "| '_ \\| '__/ _` | '_ \\ / _` / __|"
-	puts "| |_) | | | (_| | | | | (_| \\__ \\"
-	puts "|_.__/|_|  \\__,_|_| |_|\\__,_|___/"
-	puts
+	$report_file.write(" _                         _     \n")
+	$report_file.write("| |                       | |    \n")
+	$report_file.write("| |__  _ __ __ _ _ __   __| |___ \n")
+	$report_file.write("| '_ \\| '__/ _` | '_ \\ / _` / __|\n")
+	$report_file.write("| |_) | | | (_| | | | | (_| \\__ \\\n")
+	$report_file.write("|_.__/|_|  \\__,_|_| |_|\\__,_|___/\n")
+	line_blank
 end
 
 # given brands_hash, print brands report
 def report_brands_hash(brands_hash)
   brands_hash.each do |brand, info|
-    puts brand
+    $report_file.write(brand+"\n")
     line_sep
-    puts "number of brand's toys: #{info['stock']}"
-    puts "average price: $#{(info['full-price'] / info['count']).round(2)}"
-    puts "total revenue for this brands: $#{info['revenue'].round(2)}"
+    $report_file.write("Number of Products: #{info['stock']}\n")
+    $report_file.write("Average Product Price: $#{(info['full-price'] / info['count']).round(2)}\n")
+    $report_file.write("Total Revenue: $#{info['revenue'].round(2)}\n")
     line_sep
-    puts
+    line_blank
   end
 end
 
@@ -71,16 +76,16 @@ def create_report
   product_header
   items.each do |product|
     # Print the name of the toy
-    puts product['title']
+    $report_file.write("--#{product['title']}--\n")
     line_sep
 
     # Print the retail price of the toy
     full_price = Float(product['full-price']).round(2)
-    puts "full price: $#{full_price}"
+    $report_file.write("Retail Price: $#{full_price}\n")
 
     # Calculate and print the total number of purchases
     num = product['purchases'].length
-    puts "num purchases: #{num}"
+    $report_file.write("Total Purchases: #{num}\n")
 
     # Some calculation for brands_hash
     brand = product['brand']
@@ -100,21 +105,22 @@ def create_report
     end
 
     # Print the total amount of sales
-    puts "total amount of sales: $#{total_sales.round(2)}" 
+    $report_file.write("Total Sales Volume: $#{total_sales.round(2)}\n")
 
     # Calculate and print the average price the toy sold for
     avg_price = total_sales / num
-    puts "average price: $#{avg_price.round(2)}"
+    $report_file.write("Average Price: $#{avg_price.round(2)}\n")
 
     # Calculate and print the average discount based off the average sales price
     discount = 1 - avg_price / Float(product['full-price'])
-    puts "average discount: #{(discount * 100).round(2)}%"
+    $report_file.write("Average Discount: #{(discount * 100).round(2)}%\n")
 
     line_sep
-    puts
+    line_blank
   end
   brand_header
   report_brands_hash(brands_hash)
+  $report_file.close
 end
 
 def start
