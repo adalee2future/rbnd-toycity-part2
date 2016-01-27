@@ -1,5 +1,4 @@
 require 'json'
-require 'date'
 
 def setup_files
   path = File.join(File.dirname(__FILE__), '../data/products.json')
